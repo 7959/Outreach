@@ -3,6 +3,7 @@ package org.firstinspires.ftc.robotcontroller.internal;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
  * Created by Joseph on 12/15/2016.
@@ -16,6 +17,8 @@ public class AirplaneBotV1 extends OpMode {
         public void init() {
             front = hardwareMap.dcMotor.get("Front Left");
             back = hardwareMap.dcMotor.get("Back Left");
+            front.setDirection(DcMotorSimple.Direction.FORWARD);
+            back.setDirection(DcMotorSimple.Direction.FORWARD);
             front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -32,6 +35,8 @@ public class AirplaneBotV1 extends OpMode {
         public void init() {
             front = hardwareMap.dcMotor.get("Front Right");
             back = hardwareMap.dcMotor.get("Back Right");
+            front.setDirection(DcMotorSimple.Direction.REVERSE);
+            back.setDirection(DcMotorSimple.Direction.REVERSE);
             front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

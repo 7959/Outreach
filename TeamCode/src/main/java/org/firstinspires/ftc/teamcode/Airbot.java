@@ -16,8 +16,9 @@ public class Airbot extends LinearOpMode {
     DcMotor lR;
     DcMotor fL;
     DcMotor fR;
-    DcMotor bL;
-    DcMotor bR;
+    boolean invert = false;
+    boolean notpushed = false;
+
 
     public void runOpMode() {
         lL = hardwareMap.dcMotor.get("Right Launcher");
@@ -29,25 +30,27 @@ public class Airbot extends LinearOpMode {
         lL.setDirection(DcMotorSimple.Direction.REVERSE);
         fL = hardwareMap.dcMotor.get("Front Left");
         fR = hardwareMap.dcMotor.get("Front Right");
-        bL = hardwareMap.dcMotor.get("Back Left");
-        bR = hardwareMap.dcMotor.get("Back Right");
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         fL.setDirection(DcMotorSimple.Direction.REVERSE);
-        bR.setDirection(DcMotorSimple.Direction.REVERSE);
-        bL.setDirection(DcMotorSimple.Direction.FORWARD);
         fR.setDirection(DcMotorSimple.Direction.FORWARD);
         waitForStart();
         while(opModeIsActive()){
-            fR.setPower(gamepad1.left_stick_y -  gamepad1.left_stick_x);
-            bR.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x);
-            fL.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x);
-            bL.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x);
+            if(!invert) {
+                fR.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x);
+                fL.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x);
+            } else {
+                fR.setPower(-(gamepad1.left_stick_y - gamepad1.left_stick_x));
+                fL.setPower(-(gamepad1.left_stick_y + gamepad1.left_stick_x));
+            }
+            if(gamepad1.left_bumper && notpushed){
+                notpushed = false;
+                invert = !invert;
+            } else if(!gamepad1.left_bumper){
+                notpushed = true;
+            }
 
             if(on){
                 lR.setPower(1);
@@ -60,12 +63,18 @@ public class Airbot extends LinearOpMode {
                 lL.setPower(gamepad1.right_stick_y);
             }
             if(gamepad1.a && !poop){
-                sleep(250);
-
                 poop = true;
                 on = !on;
-            } else poop = false;
+            } else if(!gamepad1.a){
+                poop = false;
+            }
+            telemetry.addData("Pew", lL.getPower());
+            telemetry.addData("Controls ya dummy", "left bumper to invert, a to shoot");
+            telemetry.addData("Inverted", invert);
+            telemetry.update();
         }
         }
+        private void invert(){
 
+        }
     }
